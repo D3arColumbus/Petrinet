@@ -10,14 +10,19 @@ public class Transition extends Figure {
 
     private static final int LENGTH = 10;
     private static final int WITH = 50;
+    private SelectedOrientation selectedOrientation;
 
-    public Transition(int x, int y) {
+    public Transition(int x, int y, SelectedOrientation so) {
         super(x, y);
+        selectedOrientation = so;
     }
 
     @Override
     public void draw(Graphics2D g) {
+        if(selectedOrientation == SelectedOrientation.VERTICAL)
         g.drawRect(x - LENGTH/2, y - WITH/2, LENGTH, WITH);
+        else
+            g.drawRect(x - WITH/2, y - LENGTH/2, WITH, LENGTH);
     }
 
     public void fire(){
