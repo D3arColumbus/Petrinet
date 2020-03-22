@@ -23,11 +23,10 @@ public class Place extends Figure {
 
     @Override
     public void draw(Graphics2D g) {
-
         g.setColor(new Color(238, 238, 238));
         g.fillOval(x,y, 2*RADIUS, 2*RADIUS);
         g.setColor(Color.BLACK);
-        g.drawString(String.valueOf(count), getCenterX(), getCenterY());
+        g.drawString(String.valueOf(count), (x + RADIUS) - g.getFontMetrics().stringWidth(String.valueOf(count))/2, (y + RADIUS) + g.getFontMetrics().getHeight()/4);
         g.drawOval(x,y, 2*RADIUS, 2*RADIUS );
     }
 
@@ -47,6 +46,12 @@ public class Place extends Figure {
     @Override
     public int getCenterY() {
         return y + RADIUS;
+    }
+
+    @Override
+    public void move(int x, int y) {
+        this.x = x - RADIUS;
+        this.y = y - RADIUS;
     }
 
     @Override

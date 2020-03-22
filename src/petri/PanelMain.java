@@ -1,5 +1,7 @@
 package petri;
 
+import javafx.scene.input.MouseDragEvent;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -11,35 +13,43 @@ public class PanelMain extends JPanel {
     private boolean transToPlace = false;
     private Place currentPlace;
     private Transition currentTrans;
+    private boolean moving;
 
     public PanelMain(){
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
                 Figure selectedFigure = FigureManagement.getFigure(evt.getX(),evt.getY());
-                if(selectedFigure != null){
-                    if(selectedFigure.toString().equals("Place")){
-                        Place place = (Place) selectedFigure;
-                        if(evt.getButton() == 1)
-                            currentPlace = place;
-                        else if(evt.getButton() == 3)
-                            place.setCount(place.getCount() - 1);
-                    }else{
-                        Transition transition = (Transition) selectedFigure;
-                        if(evt.getButton() == 1)
-                            currentTrans = transition;
+                if(FrameMain.isControlDown()){
+                    if(selectedFigure != null){
+                        selectedFigure.move(evt.getX(), evt.getY());
+                        moving = true;
                     }
-                }else{
-                    if(evt.getButton() == 1) {
-                        if (FrameMain.getSelectedFigure() == SelectedFigure.PLACE) {
-                            FigureManagement.addPlaces(new Place(evt.getX(), evt.getY()));
+
+
+                }else {
+                    if (selectedFigure != null) {
+                        if (selectedFigure.toString().equals("Place")) {
+                            Place place = (Place) selectedFigure;
+                            if (evt.getButton() == 1)
+                                currentPlace = place;
+                            else if (evt.getButton() == 3)
+                                place.setCount(place.getCount() - 1);
                         } else {
-                            FigureManagement.addTransition(new Transition(evt.getX(), evt.getY(), FrameMain.getSelectedOrientation()));
+                            Transition transition = (Transition) selectedFigure;
+                            if (evt.getButton() == 1)
+                                currentTrans = transition;
+                        }
+                    } else {
+                        if (evt.getButton() == 1) {
+                            if (FrameMain.getSelectedFigure() == SelectedFigure.PLACE) {
+                                FigureManagement.addPlaces(new Place(evt.getX(), evt.getY()));
+                            } else {
+                                FigureManagement.addTransition(new Transition(evt.getX(), evt.getY(), FrameMain.getSelectedOrientation()));
+                            }
                         }
                     }
                 }
-
-
                 repaint();
             }
 
@@ -70,6 +80,20 @@ public class PanelMain extends JPanel {
                 currentTrans = null;
                 repaint();
         }
+        });
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                if (moving) {
+                    Figure selectedFigure = FigureManagement.getFigure(evt.getX(), evt.getY());
+                    if (FrameMain.isControlDown()) {
+                        if (selectedFigure != null) {
+                            selectedFigure.move(evt.getX(), evt.getY());
+                            moving = true;
+                        }
+                    }
+                }
+                repaint();
+            }
         });
     }
 

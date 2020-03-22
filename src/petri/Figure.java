@@ -38,4 +38,7 @@ public abstract class Figure {
     public abstract int getCenterX();
     public abstract int getCenterY();
 
+    public abstract void move(int x, int y);
+
+
 }

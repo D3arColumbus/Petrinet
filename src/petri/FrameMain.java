@@ -2,10 +2,7 @@ package petri;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -22,6 +19,7 @@ public class FrameMain {
     public static SelectedFigure selectedFigure = SelectedFigure.PLACE;
     public static ButtonGroup buttonGroupOrientation = new ButtonGroup();
     public static SelectedOrientation selectedOrientation = SelectedOrientation.VERTICAL;
+    public static boolean controlDown = false;
     //File
     public static JMenuItem menuItemNew = new JMenuItem("Neu");
     public static JMenuItem menuItemLoad = new JMenuItem("Laden");
@@ -46,6 +44,14 @@ public class FrameMain {
 
     public static void setSelectedOrientation(SelectedOrientation selectedOrientation) {
         FrameMain.selectedOrientation = selectedOrientation;
+    }
+
+    public static boolean isControlDown() {
+        return controlDown;
+    }
+
+    public static void setControlDown(boolean controlDown) {
+        FrameMain.controlDown = controlDown;
     }
 
     public static void main(String[] args) {
@@ -102,6 +108,24 @@ public class FrameMain {
             }
         });
 
+        KeyListener kListener = new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent keyEvent) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent keyEvent) {
+                if(keyEvent.isControlDown())
+                    setControlDown(true);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent keyEvent) {
+                    setControlDown(false);
+            }
+        };
+        frame.addKeyListener(kListener);
 
         //ButtonGroup
         buttonGroupFigure = new ButtonGroup();

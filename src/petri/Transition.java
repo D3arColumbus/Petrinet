@@ -89,6 +89,12 @@ public class Transition extends Figure {
         }
     }
 
+    @Override
+    public void move(int x, int y) {
+        setMouseX(x);
+        setMouseY(y);
+    }
+
     public void addSuccessor(Place place){
         successor.add(place);
     }
