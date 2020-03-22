@@ -10,7 +10,12 @@ public abstract class Figure {
         this.y = y;
     }
 
+    protected Figure() {
+    }
+
     public abstract void draw(Graphics2D g);
+
+    public abstract Figure inFigure(int mx, int my);
 
     public void setX(int x) {
         if(x >= 0)
@@ -21,4 +26,16 @@ public abstract class Figure {
         if(y >= 0)
             this.y = y;
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public abstract int getCenterX();
+    public abstract int getCenterY();
+
 }

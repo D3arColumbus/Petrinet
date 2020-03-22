@@ -13,20 +13,80 @@ public class Transition extends Figure {
     private SelectedOrientation selectedOrientation;
 
     public Transition(int x, int y, SelectedOrientation so) {
-        super(x, y);
         selectedOrientation = so;
+        setMouseX(x);
+        setMouseY(y);
+    }
+
+    private void setMouseX(int x){
+        if(selectedOrientation == SelectedOrientation.VERTICAL){
+            setX(x - LENGTH/2);
+        }else{
+            setX(x - WITH/2);
+        }
+    }
+
+    private void setMouseY(int y){
+        if(selectedOrientation == SelectedOrientation.VERTICAL){
+            setY(y - WITH/2);
+        }else{
+            setY(y - LENGTH/2);
+        }
     }
 
     @Override
     public void draw(Graphics2D g) {
+        predecessor.forEach(e->g.drawLine(getCenterX(),getCenterY(),e.getCenterX(),e.getCenterY()));
+        successor.forEach(e->g.drawLine(getCenterX(),getCenterY(),e.getCenterX(),e.getCenterY()));
+        g.setColor(new Color(238, 238, 238));
         if(selectedOrientation == SelectedOrientation.VERTICAL)
-        g.drawRect(x - LENGTH/2, y - WITH/2, LENGTH, WITH);
+            g.fillRect(x, y, LENGTH, WITH);
         else
-            g.drawRect(x - WITH/2, y - LENGTH/2, WITH, LENGTH);
+            g.fillRect(x, y, WITH, LENGTH);
+        g.setColor(Color.BLACK);
+        if(selectedOrientation == SelectedOrientation.VERTICAL)
+            g.drawRect(x, y, LENGTH, WITH);
+        else
+            g.drawRect(x, y, WITH, LENGTH);
     }
 
     public void fire(){
+        predecessor.forEach(e-> e.setCount(e.getCount()-1));
+        successor.forEach(e-> e.setCount(e.getCount() + 1));
+        FrameMain.logger.info("fire!");
+    }
 
+    @Override
+    public Figure inFigure(int mx, int my) {
+        //FrameMain.logger.info("InFigureTransition: " + mx + " " + my);
+        if(selectedOrientation == SelectedOrientation.VERTICAL) {
+            if (mx >= x && mx <= x + LENGTH  &&
+                    my >= y && my <= y + WITH )
+                return this;
+        }else{
+            if(mx >= x && mx <= x + WITH &&
+                    my >= y && my <= y + LENGTH )
+                return this;
+        }
+        return null;
+    }
+
+    @Override
+    public int getCenterX() {
+        if(selectedOrientation == SelectedOrientation.VERTICAL) {
+            return x + LENGTH / 2;
+        }else {
+            return x + WITH / 2;
+        }
+    }
+
+    @Override
+    public int getCenterY() {
+        if(selectedOrientation == SelectedOrientation.VERTICAL){
+            return y + WITH/2;
+        }else{
+            return y + LENGTH/2;
+        }
     }
 
     public void addSuccessor(Place place){
@@ -39,5 +99,10 @@ public class Transition extends Figure {
 
     public boolean found(int x, int y){
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Transition";
     }
 }

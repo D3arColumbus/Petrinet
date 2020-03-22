@@ -23,13 +23,35 @@ public class FigureManagement {
 
     }
 
+    public static void addConnection(Place place, Transition transition){
+        transition.addPredecessor(place);
+    }
+
+    public static void addConnection(Transition transition, Place place){
+        transition.addSuccessor(place);
+    }
+
     public static void getTransition(int x, int y){
         transitions.forEach(transition -> transition.found(x,y));
     }
 
-    public static void draw(Graphics2D g){
-        places.forEach(place -> place.draw(g));
-        transitions.forEach(transition -> transition.draw(g));
+    public static Figure getFigure(int x, int y){
+        for(Place p : places){
+            if(p.inFigure(x,y) != null){
+                return p.inFigure(x,y);
+            }
+        }
+        for(Transition t : transitions){
+            if(t.inFigure(x,y) != null){
+                return t.inFigure(x,y);
+            }
+        }
+        FrameMain.logger.info("Found no figure");
+        return null;
+    }
 
+    public static void draw(Graphics2D g){
+        transitions.forEach(transition -> transition.draw(g));
+        places.forEach(place -> place.draw(g));
     }
 }
